@@ -1,5 +1,5 @@
 pydantic
-# bittensor==7.4.0
+bittensor==7.4.0
 psutil
 GPUtil
 inflect
@@ -7,8 +7,7 @@ huggingface_hub
 librosa
 torchaudio
 scipy
-#git+https://github.com/facebookresearch/audiocraft.git
-git+https://github.com/rayonlabs/fiber.git
+# git+https://github.com/rayonlabs/fiber.git
 transformers
 datasets
 wandb
