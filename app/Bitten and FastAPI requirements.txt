@@ -277,7 +277,7 @@ spacy==3.7.2
 spacy-legacy==3.0.12
 spacy-loggers==1.0.5
 speechbrain==0.5.16
-SQLAlchemy==1.4.51
+SQLAlchemy==1.4.51                    #updated with 2.0.35
 srsly==2.4.8
 stack-data==0.6.3
 starlette==0.27.0
