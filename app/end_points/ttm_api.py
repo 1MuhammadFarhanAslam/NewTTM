@@ -87,8 +87,9 @@ import lib
 class TTM_API(MusicGenerationService):
     def __init__(self):
         super().__init__()
-        self.target_uids = [68, 69]  # Only focus on UIDs 58 and 69 🎯
-        self.filtered_axons = self._generate_filtered_axons_list()  # Generate list based on your new target
+        self.target_uids = [58, 69]  # Target UIDs 58 and 69
+        self.filtered_axons = self._generate_filtered_axons_list()  # Generate list based on target UIDs
+        self.current_index = 0  # Initialize current_index to avoid AttributeError
 
     def _generate_filtered_axons_list(self):
         """Generate the list of filtered axons for UIDs 58 and 69 only."""
@@ -120,13 +121,12 @@ class TTM_API(MusicGenerationService):
             print(f"An error occurred while generating filtered axons list: {e}")
             return []
 
-
     def get_filtered_axons(self):
         """Get the next item from the filtered axons list for UIDs 58 and 69."""
         # Regenerate the list if it's exhausted
         if not self.filtered_axons:
             self.filtered_axons = self._generate_filtered_axons_list()
-            self.current_index = 0  # Reset the index when list is rebuilt
+            self.current_index = 0  # Reset the index when the list is rebuilt
 
         # Get the next item
         if self.filtered_axons:  # Check if the list is not empty
@@ -136,3 +136,4 @@ class TTM_API(MusicGenerationService):
             return [item_to_return]
         else:
             return None  # Return None if there are no axons left
+
