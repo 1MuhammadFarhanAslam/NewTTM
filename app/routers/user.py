@@ -131,7 +131,7 @@ async def ttm_service(request: TTMrequest, user: User = Depends(get_current_acti
                 response = ttm_api.query_network(axon, prompt, duration=duration)
 
                 # Process the response
-                audio_data = ttm_api.process_response(axon, response, prompt)
+                audio_data = ttm_api.process_response(axon, response, prompt, api=True)
                 bt.logging.info(f"Audio data: {audio_data}")
 
                 try:

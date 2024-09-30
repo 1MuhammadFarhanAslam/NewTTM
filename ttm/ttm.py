@@ -125,45 +125,75 @@ class MusicGenerationService(AIModelService):
         
         bt.logging.info(f"Scores after update in TTM: {self.scores}")
 
-    def process_response(self, axon, response, prompt):
-        """Processes a single response from the network."""
+    def process_response(self, axon, response, prompt, api=False):
         try:
-            if response is not None and isinstance(response, MusicGeneration) and response.music_output:
+            music_output = response.music_output
+            if response is not None and isinstance(response, lib.protocol.MusicGeneration) and response.music_output is not None and response.dendrite.status_code == 200:
                 bt.logging.success(f"Received music output from {axon.hotkey}")
-                self.handle_music_output(axon, response.music_output, prompt, response.model_name)
+                if api:
+                    file = self.handle_music_output(axon, music_output, prompt, response.model_name)
+                    return file
+                else:
+                    self.handle_music_output(axon, music_output, prompt, response.model_name)
+            elif response.dendrite.status_code != 403:
+                self.punish(axon, service="Text-To-Music", punish_message=response.dendrite.status_message)
             else:
-                self.punish(axon, service="Text-To-Music", punish_message="Invalid response")
+                pass
+            self.service_flags["MusicGenerationService"] = True
         except Exception as e:
-            bt.logging.error(f"Error processing response: {e}")
+            bt.logging.error(f'An error occurred while handling speech output: {e}')
 
     def handle_music_output(self, axon, music_output, prompt, model_name):
-        """Handles the received music output and saves it to file."""
+        token = 0
         try:
             # Convert the list to a tensor
-            audio_data = torch.Tensor(music_output) / torch.max(torch.abs(torch.Tensor(music_output)))
+            speech_tensor = torch.Tensor(music_output)
+            print(f"Speech Tensor: {speech_tensor[:500]}")
+            # Normalize the speech data
+            audio_data = speech_tensor / torch.max(torch.abs(speech_tensor))
 
-            # Convert to 32-bit PCM and save the file as .wav
-            audio_data_int = (audio_data * 2147483647).type(torch.IntTensor).unsqueeze(0)
+            # Convert to 32-bit PCM
+            audio_data_int_ = (audio_data * 2147483647).type(torch.IntTensor)
+
+            # Add an extra dimension to make it a 2D tensor
+            audio_data_int = audio_data_int_.unsqueeze(0)
+
+            # Save the audio data as a .wav file
+            # After saving the audio file
             output_path = os.path.join('/tmp', f'output_music_{axon.hotkey}.wav')
-            torchaudio.save(output_path, src=audio_data_int, sample_rate=32000)
+            sampling_rate = 32000
+            torchaudio.save(output_path, src=audio_data_int, sample_rate=sampling_rate)
             bt.logging.info(f"Saved audio file to {output_path}")
 
-            # Log audio to WandB
-            uid_in_metagraph = self.metagraph.hotkeys.index(axon.hotkey)
-            wandb.log({f"TTM prompt: {prompt[:100]} ....": wandb.Audio(np.array(audio_data), caption=f'For HotKey: {axon.hotkey[:10]}', sample_rate=32000)})
-            bt.logging.success(f"TTM Audio file uploaded to wandb for Hotkey {axon.hotkey}")
+            try:
+                uid_in_metagraph = self.metagraph.hotkeys.index(axon.hotkey)
+                wandb.log({f"TTM prompt: {prompt[:100]} ....": wandb.Audio(np.array(audio_data_int_), caption=f'For HotKey: {axon.hotkey[:10]} and uid {uid_in_metagraph}', sample_rate=sampling_rate)})
+                bt.logging.success(f"TTM Audio file uploaded to wandb successfully for Hotkey {axon.hotkey} and UID {uid_in_metagraph}")
+            except Exception as e:
+                bt.logging.error(f"Error uploading TTM audio file to wandb: {e}")
 
-            # Calculate the duration and adjust the score
+            # Calculate the duration
             duration = self.get_duration(output_path)
+            token = duration * 50.2
+            bt.logging.info(f"The duration of the audio file is {duration} seconds.")
+            # Score the output and update the weights
             score = self.score_output(output_path, prompt)
-            if duration < 15:
-                score = self.score_adjustment(score, duration)
-
-            bt.logging.info(f"Final score after processing: {score}")
-            self.update_score(axon, score, service="Text-To-Music")
+            bt.logging.info(f"Score output after analysing the output file: {score}")
+            try:
+                if duration < 15:
+                    score = self.score_adjustment(score, duration)
+                    bt.logging.info(f"Score updated based on short duration than the required by the client: {score}")
+                else:
+                    bt.logging.info(f"Duration is greater than 15 seconds. No need to penalize the score.")
+            except Exception as e:
+                bt.logging.error(f"Error in penalizing the score: {e}")
+            bt.logging.info(f"Aggregated Score from Smoothness, SNR and Consistancy Metric: {score}")
+            self.update_score(axon, score, service="Text-To-Music", ax=self.filtered_axon)
+            return output_path
 
         except Exception as e:
-            bt.logging.error(f"Error handling music output: {e}")
+            bt.logging.error(f"Error processing Music output: {e}")
+
 
     def get_duration(self, wav_file_path):
         """Returns the duration of the audio file in seconds."""
