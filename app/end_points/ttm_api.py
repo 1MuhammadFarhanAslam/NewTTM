@@ -87,44 +87,52 @@ import lib
 class TTM_API(MusicGenerationService):
     def __init__(self):
         super().__init__()
-        self.target_uids = [68, 69]  # Target UIDs
-        self.filtered_axons = self._generate_filtered_axons_list()
+        self.target_uids = [68, 69]  # Only focus on UIDs 58 and 69 🎯
+        self.filtered_axons = self._generate_filtered_axons_list()  # Generate list based on your new target
 
     def _generate_filtered_axons_list(self):
-        """Generate the list of axons specifically for UIDs 68 and 69."""
+        """Generate the list of filtered axons for UIDs 58 and 69 only."""
         try:
+            # Convert the metagraph's UIDs to a list
             uids = self.metagraph.uids.tolist()
 
-            # Ensure the total_stake and axon IP checks
-            total_stake_tensor = torch.tensor(self.metagraph.total_stake)
-            total_stake_mask = (total_stake_tensor >= 0).float()  # PyTorch tensor for stake mask
+            # Convert total_stake_tensor to a PyTorch tensor if it's not already
+            total_stake_tensor = torch.tensor(self.metagraph.total_stake)  
+            total_stake_mask = (total_stake_tensor >= 0).float()  # Boolean mask as float
+
+            # Prepare axon IP list and convert it to a tensor
             axon_ips = [self.metagraph.neurons[uid].axon_info.ip != '0.0.0.0' for uid in uids]
             axon_ips_tensor = torch.tensor(axon_ips, dtype=torch.float32)
 
-            # Multiply the stake and IP tensors
+            # Multiply the two PyTorch tensors
             queryable_axons_mask = total_stake_mask * axon_ips_tensor
 
-            # Filter UIDs for those that match 68 or 69 and are queryable
+            # Filter UIDs to only include 58 and 69 that match queryable criteria
             filtered_uids = [
                 uid for uid, queryable in zip(uids, queryable_axons_mask)
                 if queryable.item() and uid in self.target_uids
             ]
 
-            # Create a list of tuples (UID, Axon) for the filtered UIDs
+            # Create a list of tuples (UID, Axon) for the filtered UIDs (58 and 69)
             filtered_axons = [(uid, self.metagraph.neurons[uid].axon_info) for uid in filtered_uids]
-            return filtered_axons
+            return filtered_axons  # Return the filtered axons list for 58 and 69
         except Exception as e:
             print(f"An error occurred while generating filtered axons list: {e}")
             return []
 
+
     def get_filtered_axons(self):
-        """Return the next filtered axon for UIDs 68 or 69."""
+        """Get the next item from the filtered axons list for UIDs 58 and 69."""
+        # Regenerate the list if it's exhausted
         if not self.filtered_axons:
             self.filtered_axons = self._generate_filtered_axons_list()
-            self.current_index = 0
+            self.current_index = 0  # Reset the index when list is rebuilt
 
+        # Get the next item
         if self.filtered_axons:  # Check if the list is not empty
             item_to_return = self.filtered_axons[self.current_index % len(self.filtered_axons)]
-            self.current_index += 1  # Move to the next axon in the list
-            bt.logging.debug(f"Returning axon for UID 68 or 69: {item_to_return}")
-     
+            self.current_index += 1  # Increment for next call
+            bt.logging.debug(f"Returning axon for UID 58 or 69: {item_to_return}")
+            return [item_to_return]
+        else:
+            return None  # Return None if there are no axons left
