@@ -1,7 +1,7 @@
 import re
 import os
 from fastapi import HTTPException , Depends
-from hashing import hash_password, verify_hash
+from app.hashing import hash_password, verify_hash
 from models import Admin, SecretKey, AdminInfo
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import create_engine
