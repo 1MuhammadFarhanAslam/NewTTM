@@ -134,7 +134,7 @@ def create_app(secret_key: str):
         "https://bittaudio.ai",
         "https://api.bittaudio.ai",
         "https://v1.api.bittaudio.ai",
-        "http://79.117.18.84:38005"
+        "http://79.117.18.84:38287"
     ]
 
     # Register the global exception handler for RateLimitExceeded
