@@ -28,8 +28,8 @@ ttm_api = TTM_API()
 
 
 # Define a Pydantic model for the request body
-# class TTSMrequest(BaseModel):
-#     prompt: str # The prompt for the Text-to-Music service
+class TTMrequest(BaseModel):
+    prompt: str # The prompt for the Text-to-Music service
 #     duration: int # The duration of the audio in seconds
 
 @router.post("/change_password", response_model=dict)
@@ -96,7 +96,7 @@ async def change_user_password(
 # Endpoint for ttm_service
 @router.post("/ttm_service")
 # @limiter.limit("1/5 minutes")  # Limit to one request per minute per user
-async def ttm_service(request: Request, user: User = Depends(get_current_active_user)):
+async def ttm_service(request: TTMrequest, user: User = Depends(get_current_active_user)):
     try:
         user_dict = jsonable_encoder(user)
         print("User details:", user_dict)
