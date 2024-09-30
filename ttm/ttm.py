@@ -139,7 +139,7 @@ class MusicGenerationService(AIModelService):
                 self.punish(axon, service="Text-To-Music", punish_message=response.dendrite.status_message)
             else:
                 pass
-            self.service_flags["MusicGenerationService"] = True
+
         except Exception as e:
             bt.logging.error(f'An error occurred while handling speech output: {e}')
 
@@ -188,7 +188,7 @@ class MusicGenerationService(AIModelService):
             except Exception as e:
                 bt.logging.error(f"Error in penalizing the score: {e}")
             bt.logging.info(f"Aggregated Score from Smoothness, SNR and Consistancy Metric: {score}")
-            self.update_score(axon, score, service="Text-To-Music", ax=self.filtered_axon)
+            self.update_score(axon, score, service="Text-To-Music")
             return output_path
 
         except Exception as e:
