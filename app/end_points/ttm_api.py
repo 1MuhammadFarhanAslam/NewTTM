@@ -1,6 +1,6 @@
 # tts_api.py
 import bittensor as bt
-from classes.ttm import MusicGenerationService
+from ttm.ttm import MusicGenerationService
 import torch
 import random
 import lib
