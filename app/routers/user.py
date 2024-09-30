@@ -117,7 +117,7 @@ async def ttm_service(request: TTMrequest, user: User = Depends(get_current_acti
                 bt.logging.info("__________request duration____________: ", duration)
 
                 # Get filtered axons
-                filtered_axons = ttm_api.get_filtered_axons()
+                filtered_axons = [68,69] # ttm_api.get_filtered_axons()
                 bt.logging.info(f"Filtered axons: {filtered_axons}")
 
                 # Check if there are axons available
