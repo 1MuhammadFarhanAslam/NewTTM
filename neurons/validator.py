@@ -93,8 +93,8 @@ sys.path.insert(0, project_root)
 sys.path.insert(0, audio_subnet_path)
 
 from lib.globals import service_flags
-from classes.ttm import MusicGenerationService
-from classes.aimodel import AIModelService
+from ttm.ttm import MusicGenerationService
+from ttm.aimodel import AIModelService
 
 # Check if the 'app' folder exists
 if os.path.exists(os.path.join(project_root, 'app')):
