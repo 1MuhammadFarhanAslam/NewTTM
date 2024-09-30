@@ -87,7 +87,7 @@ import lib
 class TTM_API(MusicGenerationService):
     def __init__(self):
         super().__init__()
-        self.target_uids = [58, 69]  # Target UIDs 58 and 69
+        self.target_uids = [68, 69]  # Target UIDs 58 and 69
         self.filtered_axons = self._generate_filtered_axons_list()  # Generate list based on target UIDs
         self.current_index = 0  # Initialize current_index to avoid AttributeError
 
