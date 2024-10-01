@@ -103,15 +103,15 @@ import sys
 from getpass import getpass  # Use getpass to hide the password input
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from slowapi.errors import RateLimitExceeded
+# from slowapi.errors import RateLimitExceeded
 from fastapi.responses import JSONResponse
 import json
 
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
+# from slowapi import Limiter, _rate_limit_exceeded_handler
+# from slowapi.util import get_remote_address
 
-# Create a Limiter instance
-limiter = Limiter(key_func=get_remote_address)
+# # Create a Limiter instance
+# limiter = Limiter(key_func=get_remote_address)
 
 # Define the function to create the FastAPI application
 def create_app(secret_key: str):
