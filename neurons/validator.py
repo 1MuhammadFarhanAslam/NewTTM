@@ -122,8 +122,7 @@ class AIModelController():
     async def run_services(self):
         while True:
             self.check_and_update_wandb_run()
-            if isinstance(self.current_service, MusicGenerationService) and self.service["MusicGenerationService"]:
-                await self.current_service.run_async()
+            await self.music_generation_service.run_async()
 
     def check_and_update_wandb_run(self):
         # Calculate the time difference between now and the last run start time
