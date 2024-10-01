@@ -66,3 +66,4 @@ urllib3
 uvicorn
 watchfiles
 websockets
+ngrok
