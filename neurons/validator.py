@@ -92,7 +92,6 @@ audio_subnet_path = os.path.abspath(project_root)
 sys.path.insert(0, project_root)
 sys.path.insert(0, audio_subnet_path)
 
-from lib.globals import service_flags
 from ttm.ttm import MusicGenerationService
 from ttm.aimodel import AIModelService
 
@@ -106,7 +105,6 @@ class AIModelController():
         self.aimodel = AIModelService()
         self.music_generation_service = MusicGenerationService()
         self.current_service = self.music_generation_service
-        self.service = service_flags
         self.last_run_start_time = dt.datetime.now()
 
     async def run_fastapi_with_ngrok(self, app):
