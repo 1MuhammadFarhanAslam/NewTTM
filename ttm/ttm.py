@@ -124,6 +124,7 @@ class MusicGenerationService(AIModelService):
                 self.process_response(axon, response, prompt)
         
         bt.logging.info(f"Scores after update in TTM: {self.scores}")
+        self.update_block()
 
     def process_response(self, axon, response, prompt, api=False):
         try:
