@@ -138,8 +138,10 @@ class MusicGenerationService(AIModelService):
                 else:
                     self.handle_music_output(axon, music_output, prompt, response.model_name)
             elif response.dendrite.status_code != 403:
+                print("------------------Response-----------------", response)
                 self.punish(axon, service="Text-To-Music", punish_message=response.dendrite.status_message)
             else:
+                print("------------------Response 144-----------------", response)
                 pass
 
         except Exception as e:
