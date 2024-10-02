@@ -126,7 +126,7 @@ class MusicGenerationService(AIModelService):
         bt.logging.info(f"Scores after update in TTM: {self.scores}")
         self.update_block()
 
-    def process_response(self, axon, response, prompt, api=False):
+    def process_response(self, axon, response, prompt, api=True):
         try:
             music_output = response.music_output
             if response is not None and isinstance(response, MusicGeneration) and response.music_output is not None and response.dendrite.status_code == 200:

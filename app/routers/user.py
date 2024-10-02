@@ -131,9 +131,7 @@ async def ttm_service(request: TTMrequest, user: User = Depends(get_current_acti
                 response = ttm_api.query_network(axon, prompt, duration=duration)
 
                 # Process the response
-                x = ttm_api()
-            
-                audio_data = x.process_response(axon, response, prompt, api=True)
+                audio_data = ttm_api.process_response(axon, response, prompt)
                 bt.logging.info(f"Audio data: {audio_data}")
 
                 try:
@@ -161,9 +159,6 @@ async def ttm_service(request: TTMrequest, user: User = Depends(get_current_acti
         else:
             print(f"{user.username}! You do not have any roles assigned.")
             raise HTTPException(status_code=401, detail=f"{user.username}! Your does not have any roles assigned")
-    except:
-        print("Internal Server error")
-
 
     # except RateLimitExceeded as e:
     #     # Handle the RateLimitExceeded exception
