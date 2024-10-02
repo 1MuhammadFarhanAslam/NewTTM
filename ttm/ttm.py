@@ -133,6 +133,7 @@ class MusicGenerationService(AIModelService):
                 bt.logging.success(f"Received music output from {axon.hotkey}")
                 if api:
                     file = self.handle_music_output(axon, music_output, prompt, response.model_name)
+                    print("File:----------------", file)
                     return file
                 else:
                     self.handle_music_output(axon, music_output, prompt, response.model_name)
