@@ -38,7 +38,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 # loading version from setup.py
 with codecs.open(
-    os.path.join(here, "ttm/__init__.py"), encoding="utf-8"
+    os.path.join(here, "lib/__init__.py"), encoding="utf-8"
 ) as init_file:
     version_match = re.search(
         r"^__version__ = ['\"]([^'\"]*)['\"]", init_file.read(), re.M
@@ -51,7 +51,7 @@ setup(
     description="ttm_bittensor_subnet",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/sherijigarx/newTTM",
+    url="https://github.com/1MuhammadFarhanAslam/NewTTM.git",
     author="ttm",
     packages=find_packages(),
     include_package_data=True,

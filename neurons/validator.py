@@ -92,7 +92,6 @@ audio_subnet_path = os.path.abspath(project_root)
 sys.path.insert(0, project_root)
 sys.path.insert(0, audio_subnet_path)
 
-from lib.globals import service_flags
 from ttm.ttm import MusicGenerationService
 from ttm.aimodel import AIModelService
 
@@ -106,7 +105,6 @@ class AIModelController():
         self.aimodel = AIModelService()
         self.music_generation_service = MusicGenerationService()
         self.current_service = self.music_generation_service
-        self.service = service_flags
         self.last_run_start_time = dt.datetime.now()
 
     async def run_fastapi_with_ngrok(self, app):
@@ -124,8 +122,7 @@ class AIModelController():
     async def run_services(self):
         while True:
             self.check_and_update_wandb_run()
-            if isinstance(self.current_service, MusicGenerationService) and self.service["MusicGenerationService"]:
-                await self.current_service.run_async()
+            await self.music_generation_service.run_async()
 
     def check_and_update_wandb_run(self):
         # Calculate the time difference between now and the last run start time
@@ -166,7 +163,7 @@ async def setup_and_run(controller):
     if os.path.exists(os.path.join(project_root, 'app')):
         secret_key = os.getenv("AUTH_SECRET_KEY")
         if not secret_key:
-            raise ValueError("Auth Secret key not found in environment variable AUTH_SECRET_KEY")
+            pass
         app = create_app(secret_key)
         # Start FastAPI with ngrok without blocking
         ngrok_tunnel, server_task = await controller.run_fastapi_with_ngrok(app)
