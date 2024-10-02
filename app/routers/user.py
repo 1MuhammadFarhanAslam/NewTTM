@@ -162,9 +162,10 @@ async def ttm_service(request: TTMrequest, user: User = Depends(get_current_acti
             print(f"{user.username}! You do not have any roles assigned.")
             raise HTTPException(status_code=401, detail=f"{user.username}! Your does not have any roles assigned")
 
-    except RateLimitExceeded as e:
-        # Handle the RateLimitExceeded exception
-        print(f"Rate limit exceeded: {e}")
-        raise HTTPException(
-            status_code=429,
-            detail="Oops! You have exceeded the rate limit: 1 request / 5 minutes. Please try again later.")
+
+    # except RateLimitExceeded as e:
+    #     # Handle the RateLimitExceeded exception
+    #     print(f"Rate limit exceeded: {e}")
+    #     raise HTTPException(
+    #         status_code=429,
+    #         detail="Oops! You have exceeded the rate limit: 1 request / 5 minutes. Please try again later.")
