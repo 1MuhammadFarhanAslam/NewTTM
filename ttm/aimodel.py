@@ -1,15 +1,16 @@
 import bittensor as bt
 import pandas as pd
 import subprocess
+import traceback
 import platform
 import argparse
+import asyncio
 import inflect
 import psutil
 import GPUtil
 import sys
 import os
 import re
-from lib.default_args import default_args as args
 
 class AIModelService:
     _scores = None
@@ -42,12 +43,9 @@ class AIModelService:
     def get_config(self):
         parser = argparse.ArgumentParser()
 
-        parser.add_argument("--alpha", default=0.75, type=float, help="The weight moving average scoring.")
-        parser.add_argument("--custom", default="my_custom_value", help="Adds a custom value to the parser.")
-        parser.add_argument("--subtensor.network", type=str, default=args['subtensor_network'], help="The logging directory.")
-        parser.add_argument("--netuid", default=args['netuid'], type=int, help="The chain subnet uid.")
-        parser.add_argument("--wallet.name", type=str, default=args['wallet_name'], help="The wallet name.")
-        parser.add_argument("--wallet.hotkey", type=str, default=args['wallet_hotkey'], help="The wallet hotkey.")
+        parser.add_argument("--alpha", default=0.75, type=float, help="Weight moving average for scoring.")
+        parser.add_argument("--netuid", type=int, default=16, help="The chain subnet UID.")
+        parser.add_argument("--vcdnp", type=int, default=10, help="Number of miners to query for each forward call.")
 
         # Add Bittensor specific arguments
         bt.subtensor.add_args(parser)

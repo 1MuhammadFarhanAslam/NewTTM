@@ -15,13 +15,13 @@ from fastapi.responses import FileResponse
 import os
 import random
 from sqlalchemy.orm import Session
-# from slowapi.util import get_remote_address
-# from slowapi.errors import RateLimitExceeded
-# from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from slowapi import Limiter
 
 
-# # Create a Limiter instance
-# limiter = Limiter(key_func=get_remote_address)
+# Create a Limiter instance
+limiter = Limiter(key_func=get_remote_address)
 router = APIRouter()
 ttm_api = TTM_API()
 
@@ -131,7 +131,7 @@ async def ttm_service(request: TTMrequest, user: User = Depends(get_current_acti
                 response = ttm_api.query_network(axon, prompt, duration=duration)
 
                 # Process the response
-                audio_data = ttm_api.process_response(axon, response, prompt)
+                audio_data = ttm_api.process_response(axon, response, prompt, api=True)
                 bt.logging.info(f"Audio data: {audio_data}")
 
                 try:
@@ -159,12 +159,10 @@ async def ttm_service(request: TTMrequest, user: User = Depends(get_current_acti
         else:
             print(f"{user.username}! You do not have any roles assigned.")
             raise HTTPException(status_code=401, detail=f"{user.username}! Your does not have any roles assigned")
-    except:
-        raise HTTPException(status_code=404, detail= f"Request was not processed successfully")
 
-    # except RateLimitExceeded as e:
-    #     # Handle the RateLimitExceeded exception
-    #     print(f"Rate limit exceeded: {e}")
-    #     raise HTTPException(
-    #         status_code=429,
-    #         detail="Oops! You have exceeded the rate limit: 1 request / 5 minutes. Please try again later.")
+    except RateLimitExceeded as e:
+        # Handle the RateLimitExceeded exception
+        print(f"Rate limit exceeded: {e}")
+        raise HTTPException(
+            status_code=429,
+            detail="Oops! You have exceeded the rate limit: 1 request / 5 minutes. Please try again later.")

@@ -1,4 +1,4 @@
-__version__ = "1.0.0"
+__version__ = "3.3.6"
 version_split = __version__.split(".")
 __spec_version__ = (
     (1000 * int(version_split[0]))
@@ -10,11 +10,23 @@ __spec_version__ = (
 BLACKLISTED_IPS_SEG = []
 BLACKLISTED_IPS = []
 
-BLACKLISTED_MINER_COLDKEYS = []
+BLACKLISTED_MINER_COLDKEYS = ['5E2RHBCtUcbw5KTGvMWfeaUXKrmcrDVvqYb7EWmZzqfbFHBH',
+    '5Dq1CKGLEdquzy4cr63y39qsmZxZ2g5rSbxnkpLrHXVwXWoV',
+    '5FCZ8g13LsRdASt3rfwEfQZ9iDkDDhoUvScCSFRqocss2ukP',
+    '5CyFQsNqNkGuFsWwbjS3TMW7wLtzAQBKfL4qya7HYhFX1h2s',
+    '5FLF7CKccooocsgSDqDRAqFUktr9LwYK8ALbbZ2FJzmLpJXx',
+    '5FcQHaUjQnJNnRH2ZM9buA4PcxYaQCx79BNSCaPVn17EztMh',
+    '5FqVJrW2jCg2d8nBqrZaivy3SxE2MYUtU2o68FjFwoMdxjG4',
+    '5HeP2f5mSqTJVXwYTUtt98efSGRb7JpFySdny63erdUA9FSd',
+    '5FKwEVKAzVieNyajbPEiyoYGNQYwKX1sLoe3EqZK9Bu3Kcxx',
+    '5G6Aq86k3vFnUBA1ChJGJypz2QprKJgmFtv1mNHavEG9XmQ7',
+    '5GEz9ZQXVkAupXi7br8HtxjVCbCwEWsx6wGJkzg9mPsu9qTG',
+    '5HBVrFGy6oYhhh71m9fFGYD7zbKyAeHnWN8i8s9fJTBMCtEE',
+    ]
 
-BLACKLISTED_MINER_HOTKEYS = []
+BLACKLISTED_MINER_HOTKEYS = ['5G1NjW9YhXLadMWajvTkfcJy6up3yH2q1YzMXDTi6ijanChe','5HBVrFGy6oYhhh71m9fFGYD7zbKyAeHnWN8i8s9fJTBMCtEE']
 
-BLACKLISTED_VALIDATORS = []
+BLACKLISTED_VALIDATORS = ['5G1NjW9YhXLadMWajvTkfcJy6up3yH2q1YzMXDTi6ijanChe']
 legit_validators = ['5F4tQyWrhfGVcNhoqeiNsR6KjD4wMZ2kfhLj4oHYuyHbZAc3', '5HTZipxVCMqzhLt9QKi2Nxj3Fd6TCSnzTjBKR3vtiuTkuq1B', '5DHgZowFNKcGeAiN6EyJGA5he4PZe1Jp41yt5QPaC9jF68QD',
     '5HbLYXUBy1snPR8nfioQ7GoA9x76EELzEq9j7F32vWUQHm1x', '5DqQ1r8Xr6u88QrJcfxNisvzjcGj95W7H2SzX1Nwgd1CrDnK',
     '5Hddm3iBFD2GLT5ik7LZnT3XJUnRnN8PoeCFgGQgawUVKNm8',
