@@ -161,6 +161,8 @@ async def ttm_service(request: TTMrequest, user: User = Depends(get_current_acti
         else:
             print(f"{user.username}! You do not have any roles assigned.")
             raise HTTPException(status_code=401, detail=f"{user.username}! Your does not have any roles assigned")
+    except:
+        print("Internal Server error")
 
 
     # except RateLimitExceeded as e:
