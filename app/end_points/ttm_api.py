@@ -87,7 +87,6 @@ import lib
 class TTM_API(MusicGenerationService):
     def __init__(self):
         super().__init__()
-        self.target_uids = [68, 69]  # Target UIDs 58 and 69
         self.filtered_axons = self._generate_filtered_axons_list()  # Generate list based on target UIDs
         self.current_index = 0  # Initialize current_index to avoid AttributeError
 
@@ -111,7 +110,7 @@ class TTM_API(MusicGenerationService):
             # Filter UIDs to only include 58 and 69 that match queryable criteria
             filtered_uids = [
                 uid for uid, queryable in zip(uids, queryable_axons_mask)
-                if queryable.item() and uid in self.target_uids
+                if queryable.item()
             ]
 
             # Create a list of tuples (UID, Axon) for the filtered UIDs (58 and 69)
