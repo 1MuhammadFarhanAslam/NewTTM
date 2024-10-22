@@ -92,7 +92,6 @@ audio_subnet_path = os.path.abspath(project_root)
 sys.path.insert(0, project_root)
 sys.path.insert(0, audio_subnet_path)
 
-from lib.globals import service_flags
 from ttm.ttm import MusicGenerationService
 from ttm.aimodel import AIModelService
 
@@ -106,15 +105,14 @@ class AIModelController():
         self.aimodel = AIModelService()
         self.music_generation_service = MusicGenerationService()
         self.current_service = self.music_generation_service
-        self.service = service_flags
         self.last_run_start_time = dt.datetime.now()
 
     async def run_fastapi_with_ngrok(self, app):
         # Setup ngrok tunnel
-        ngrok_tunnel = ngrok.connect(38287, bind_tls=True)
+        ngrok_tunnel = ngrok.connect(18502, bind_tls=True)
         print('Public URL:', ngrok_tunnel.public_url)
         # Create and start the uvicorn server as a background task
-        config = uvicorn.Config(app=app, host="0.0.0.0", port=38287)  # Ensure port matches ngrok's
+        config = uvicorn.Config(app=app, host="0.0.0.0", port=18502)  # Ensure port matches ngrok's
         server = uvicorn.Server(config)
         # No need to await here, as we want this to run in the background
         task = asyncio.create_task(server.serve())
@@ -124,7 +122,7 @@ class AIModelController():
     async def run_services(self):
         while True:
             self.check_and_update_wandb_run()
-            if isinstance(self.current_service, MusicGenerationService) and self.service["MusicGenerationService"]:
+            if isinstance(self.current_service, MusicGenerationService):
                 await self.current_service.run_async()
 
     def check_and_update_wandb_run(self):
